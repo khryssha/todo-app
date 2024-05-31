@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 export default function TodoApp() {
   const [tasks, setTasks] = useState(localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks")) : []);
   const [filteredTasks, setFilteredTasks] = useState([...tasks]);
-  //const [taskCount, setTaskCount] = useState(0);
+  const [taskCount, setTaskCount] = useState(localStorage.getItem("taskCount") ? parseInt(localStorage.getItem("taskCount")) : 0);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [filtered, setFiltered] = useState(false);
@@ -19,7 +19,7 @@ export default function TodoApp() {
     const dateString = now.getMonth()+1+"/"+now.getDate()+"/"+now.getFullYear();
     const dateid = now.toString();
     setTasks([...tasks, {prio:"None", prionum: 0, taskid: dateid, date: dateString, title: task.title, desc: task.desc, status: "Not Started", isEditing: false}]);
-    //setTaskCount(taskCount + 1);
+    setTaskCount(taskCount + 1);
     setdatesorted(false);
     setpriosorted(false);
   };
@@ -57,7 +57,7 @@ export default function TodoApp() {
 
   const deletetask = (taskid) => {
     setTasks(tasks.filter(task => task.taskid !== taskid));
-    //setTaskCount(taskCount - 1);
+    setTaskCount(taskCount - 1);
     setFilteredTasks(filteredTasks.filter(task => task.taskid !== taskid));
   };
 
@@ -71,8 +71,9 @@ export default function TodoApp() {
   };
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks))
+    localStorage.setItem("taskCount", taskCount)
     console.log(tasks)
-    } , [tasks]);
+    } , [tasks], taskCount);
 
   const filternone = () => {
     setFilteredTasks([...tasks]);
